@@ -9,7 +9,10 @@ export const signup=async (req:Request,res:Response): Promise<void>=> {
     //res.send("Get all users");
     try{
         const {id,email,password}=req.body
-    
+        if(!id || !email || !password){
+            res.status(400).json({ message: "Please provide all fields"})
+        }
+
         const userExists=await User.findOne({email})
 
         if(userExists){
@@ -46,8 +49,11 @@ export const signup=async (req:Request,res:Response): Promise<void>=> {
 export const login=async (req:Request,res:Response)=> {
     //res.send("Get all users");
     const {email,password}=req.body
+    if (!email || !password){
+        res.status(400).json({message:"Please provide all fields"})
+    }
     const user=await User.findOne({email})
-
+    
     if(user && (await bcrypt.compare(password,user.password))){
         res.json({
             id:user.id,

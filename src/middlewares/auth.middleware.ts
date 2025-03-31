@@ -6,7 +6,7 @@ interface AuthRequest extends Request {
 }
 
 // Protect routes
-const protect = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const protect = (req: AuthRequest, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
@@ -22,4 +22,3 @@ const protect = (req: AuthRequest, res: Response, next: NextFunction) => {
   }
 };
 
-export default protect;

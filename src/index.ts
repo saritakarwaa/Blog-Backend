@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import AuthRouter from './routes/Auth/user.auth'
 import connectDB from './config/db';
+import blogRoutes from './routes/Blog/BlogRoutes'
 
 // Load environment variables
 dotenv.config(); 
@@ -19,6 +20,7 @@ app.use(express.json());
 
 //Routes
 app.use('/auth',AuthRouter)
+app.use('/blogs',blogRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
