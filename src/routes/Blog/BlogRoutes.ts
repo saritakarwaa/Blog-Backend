@@ -13,7 +13,7 @@ const router: Router = express.Router();
 // Blog CRUD Routes
 router.post('/',createBlog as express.RequestHandler); 
 router.get('/', getAllBlogs); 
-router.put('/:userId/:blogId',updateBlog as express.RequestHandler)
-router.delete('/:userId/:blogId',deleteBlog as express.RequestHandler); 
+router.put('/:userId/:blogId',protect,updateBlog as express.RequestHandler)
+router.delete('/:userId/:blogId',protect,deleteBlog as express.RequestHandler); 
 
 export default router;

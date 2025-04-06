@@ -23,6 +23,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   blogs: Blog[];
+  profilePicture: string;
 }
 
 const reactionSchema: Schema<Reaction> = new Schema({
@@ -86,6 +87,10 @@ const userSchema: Schema<IUser> = new Schema(
       type: [blogSchema],
       default: [],
     },
+    profilePicture:{
+      type:String,
+      default:"",
+    }
   },
   {
     timestamps: true,
