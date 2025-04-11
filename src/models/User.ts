@@ -64,7 +64,11 @@ const blogSchema: Schema<Blog> = new Schema({
     type: [reactionSchema],
     default: [],
   },
-});
+},
+  {
+    timestamps: true, 
+  }
+);
 
 const userSchema: Schema<IUser> = new Schema(
   {

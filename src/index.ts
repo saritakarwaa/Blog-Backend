@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import AuthRouter from './routes/Auth/user.auth'
 import connectDB from './config/db';
 import blogRoutes from './routes/Blog/BlogRoutes'
+import path from 'path'
 
 // Load environment variables
 dotenv.config(); 
@@ -29,6 +30,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 //Routes
 app.use('/auth',AuthRouter)
