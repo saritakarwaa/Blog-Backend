@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 //const allowedOrigins = ["http://localhost:3000", "https://blog-frontend-umber-seven.vercel.app"];
-const allowedOrigins = ["http://localhost:3000", "https://blog-app-tau-roan.vercel.app/"];
+const allowedOrigins = ["http://localhost:3000", "https://blog-app-tau-roan.vercel.app"];
 
 app.use(cors({
   origin: function (origin, callback) {
