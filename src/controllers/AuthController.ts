@@ -128,7 +128,7 @@ export const updateUser=async (req:Request,res:Response)=>{
         console.log("Uploaded file:", req.file);
 
         if(req.file){
-            updateData.profilePicture = req.file.filename;
+            updateData.profilePicture = `uploads/${req.file.filename}`
         }
         const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
             new: true,
