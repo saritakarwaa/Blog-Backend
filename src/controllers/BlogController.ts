@@ -1,5 +1,6 @@
 import { Request,Response } from "express";
 import User from '../models/User'
+import mongoose from "mongoose";
 
 export const createBlog=async(req:Request,res:Response)=>{
     try{
@@ -8,6 +9,7 @@ export const createBlog=async(req:Request,res:Response)=>{
         if (!user) {
           return res.status(404).json({ error: "User not found" });
         }
+        
         const newBlog={
             blogId,
             blogTitle,
@@ -23,7 +25,7 @@ export const createBlog=async(req:Request,res:Response)=>{
             ]
         }
         user.blogs.push(newBlog);
-        user.save()
+        await user.save()
         res.status(201).json({
           message: "Blog created successfully",
           blog: newBlog,
@@ -108,5 +110,24 @@ export const deleteBlog=async(req:Request,res:Response)=>{
     res.status(200).json({ message: 'Blog deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Error deleting blog' });
+  }
+}
+
+export const getBlog=async(req:Request,res:Response)=>{
+  try{
+    const {userId,blogId}=req.params
+    const user = await User.findById(userId);
+       
+    if(!user) return res.status(404).json({error:"User not found"})
+    const blog=user.blogs.find((b:any)=>b.blogId===blogId)
+    if(!blog) return res.status(404).json({ error: "Blog not found" });
+    console.log("Looking for blogId:", blogId);
+    console.log("User blogs:", user.blogs);
+    res.status(200).json(blog);
+    
+  }
+  catch(error){
+    console.error(error);
+    res.status(500).json({ error: "Server error while fetching blog" });
   }
 }
