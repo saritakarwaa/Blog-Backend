@@ -1,6 +1,5 @@
 import { Request,Response } from "express";
 import User from '../models/User'
-import mongoose from "mongoose";
 
 export const createBlog=async(req:Request,res:Response)=>{
     try{
@@ -90,7 +89,7 @@ export const updateBlog=async(req:Request,res:Response)=>{
 export const deleteBlog=async(req:Request,res:Response)=>{
   try {
     const { userId, blogId } = req.params;
-    const user = await User.findById(userId);
+    const user = await User.findOne({id:userId});
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -116,15 +115,12 @@ export const deleteBlog=async(req:Request,res:Response)=>{
 export const getBlog=async(req:Request,res:Response)=>{
   try{
     const {userId,blogId}=req.params
-    const user = await User.findById(userId);
-       
+    const user =  await User.findOne({ id: userId });
     if(!user) return res.status(404).json({error:"User not found"})
+    if(!blogId)  return res.status(400).json({ error: "Invalid or missing blogId" });
     const blog=user.blogs.find((b:any)=>b.blogId===blogId)
     if(!blog) return res.status(404).json({ error: "Blog not found" });
-    console.log("Looking for blogId:", blogId);
-    console.log("User blogs:", user.blogs);
     res.status(200).json(blog);
-    
   }
   catch(error){
     console.error(error);

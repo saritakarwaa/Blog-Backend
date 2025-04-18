@@ -11,7 +11,6 @@ import {protect} from '../../middlewares/auth.middleware';
 
 const router: Router = express.Router();
 
-// Blog CRUD Routes
 router.post('/',protect,createBlog as express.RequestHandler); 
 router.get('/', getAllBlogs); 
 router.put('/:userId/:blogId',protect,updateBlog as express.RequestHandler)
