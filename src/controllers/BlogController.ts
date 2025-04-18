@@ -118,7 +118,7 @@ export const getBlog=async(req:Request,res:Response)=>{
     const user =  await User.findOne({ id: userId });
     if(!user) return res.status(404).json({error:"User not found"})
     if(!blogId)  return res.status(400).json({ error: "Invalid or missing blogId" });
-    const blog=user.blogs.find((b:any)=>b.blogId===blogId)
+    const blog=user.blogs.find((b)=>b.blogId===blogId)
     if(!blog) return res.status(404).json({ error: "Blog not found" });
     res.status(200).json(blog);
   }
