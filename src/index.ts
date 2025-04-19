@@ -5,11 +5,10 @@ import AuthRouter from './routes/Auth/user.auth'
 import connectDB from './config/db';
 import blogRoutes from './routes/Blog/BlogRoutes'
 import path from 'path'
+import redis from './config/redis'
 
-// Load environment variables
 dotenv.config(); 
 
-// Connect to MongoDB
 connectDB();
 
 const app: Application = express();
@@ -36,6 +35,18 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 //Routes
 app.use('/auth',AuthRouter)
 app.use('/blogs',blogRoutes)
+
+
+app.get('/', async (req, res) => {
+  // Set a value in Redis
+  await redis.set('foo', 'bar');
+
+  // Get the value from Redis
+  const value = await redis.get('foo');
+  
+  res.send(`Redis value: ${value}`);
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

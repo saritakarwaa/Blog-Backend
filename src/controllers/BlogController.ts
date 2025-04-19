@@ -1,5 +1,6 @@
 import { Request,Response } from "express";
 import User from '../models/User'
+import redis from '../config/redis';
 
 export const createBlog=async(req:Request,res:Response)=>{
     try{
@@ -37,8 +38,14 @@ export const createBlog=async(req:Request,res:Response)=>{
 
 export const getAllBlogs = async (req: Request, res: Response) => {
     try {
+      const cachedBlogs=await redis.get('allBlogs')
+      if (cachedBlogs) {
+        res.status(200).json(JSON.parse(cachedBlogs)); 
+        return;
+      }
       const users=await User.find()
       const blogs=users.flatMap(user=>user.blogs)
+      await redis.setex('allBlogs', 3600, JSON.stringify(blogs)); 
       res.status(200).json(blogs);
     } catch (error) {
       res.status(500).json({ error: 'Error fetching blogs' });
@@ -118,8 +125,13 @@ export const getBlog=async(req:Request,res:Response)=>{
     const user =  await User.findOne({ id: userId });
     if(!user) return res.status(404).json({error:"User not found"})
     if(!blogId)  return res.status(400).json({ error: "Invalid or missing blogId" });
+    const cachedBlog = await redis.get(`blog:${userId}:${blogId}`);
+    if (cachedBlog) {
+      return res.status(200).json(JSON.parse(cachedBlog));
+    }
     const blog=user.blogs.find((b)=>b.blogId===blogId)
     if(!blog) return res.status(404).json({ error: "Blog not found" });
+    await redis.setex(`blog:${userId}:${blogId}`, 3600, JSON.stringify(blog)); 
     res.status(200).json(blog);
   }
   catch(error){

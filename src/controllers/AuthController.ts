@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs"
 import generateToken from '../utils/generateToken';
 import { OAuth2Client } from 'google-auth-library';
 import dotenv from "dotenv"
-
+import redis from '../config/redis';
 
 dotenv.config()
 
@@ -69,18 +69,25 @@ export const login=async (req:Request,res:Response)=> {
     }
 }
 
-export const getProfile=async (req:Request,res:Response): Promise<void>=>{
+export const getProfile=async (req:Request,res:Response):Promise<void>=>{
     try{
         const {userId}=req.params
+        const cachedProfile = await redis.get(`profile:${userId}`);
+        if (cachedProfile) {
+            res.status(200).json(JSON.parse(cachedProfile)); 
+            return;
+        }
         const user=await User.findById(userId).select('-password')
         if(!user){
             res.status(404).json({error:'User not found'})
         }
+        await redis.setex(`profile:${userId}`, 3600, JSON.stringify(user));
         res.status(200).json(user)
     }
     catch(error){
         console.log(error)
         res.status(500).json({error:'Error fetching user profile'})
+        return;
     }
 }
 
