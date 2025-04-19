@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 const redis = new Redis({
-  host:  process.env.REDIS_HOST || '127.0.0.1' , // Redis server address
+  host:  process.env.REDIS_HOST || 'redis' , // Redis server address
   port: parseInt(process.env.REDIS_PORT || '6379'),         // Redis default port
 });
 
