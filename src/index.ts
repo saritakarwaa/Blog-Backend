@@ -37,16 +37,6 @@ app.use('/auth',AuthRouter)
 app.use('/blogs',blogRoutes)
 
 
-app.get('/', async (req, res) => {
-  // Set a value in Redis
-  await redis.set('foo', 'bar');
-
-  // Get the value from Redis
-  const value = await redis.get('foo');
-  
-  res.send(`Redis value: ${value}`);
-});
-
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

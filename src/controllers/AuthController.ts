@@ -72,7 +72,10 @@ export const login=async (req:Request,res:Response)=> {
 export const getProfile=async (req:Request,res:Response):Promise<void>=>{
     try{
         const {userId}=req.params
-        const cachedProfile = await redis.get(`profile:${userId}`);
+        console.log("User id",userId)
+        const cacheKey=`profile:${userId}`
+        const cachedProfile = await redis.get(cacheKey);
+        console.log("cached profile:",cachedProfile)
         if (cachedProfile) {
             res.status(200).json(JSON.parse(cachedProfile)); 
             return;
@@ -81,7 +84,7 @@ export const getProfile=async (req:Request,res:Response):Promise<void>=>{
         if(!user){
             res.status(404).json({error:'User not found'})
         }
-        await redis.setex(`profile:${userId}`, 3600, JSON.stringify(user));
+        await redis.set(cacheKey, JSON.stringify(user),'EX',30);
         res.status(200).json(user)
     }
     catch(error){
