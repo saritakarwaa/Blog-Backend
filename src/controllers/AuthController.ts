@@ -7,6 +7,9 @@ import dotenv from "dotenv"
 import redis from '../config/redis';
 
 dotenv.config()
+interface AuthRequest extends Request {
+    user?: { id: string };
+}
 
 export const signup=async (req:Request,res:Response): Promise<void>=> {
 
@@ -152,5 +155,23 @@ export const updateUser=async (req:Request,res:Response)=>{
     catch(error){
         console.error(error)
         res.status(500).json({ error: 'Error updating user' })
+    }
+}
+
+export const getMe=async (req:AuthRequest,res:Response)=>{
+    try{
+        const user=await User.findOne({id:req.user?.id})
+        if(!user){
+            return res.status(404).json({message:"User not found"})
+        }
+        res.status(200).json({
+            _id: user._id,
+            id:user.id,
+            email:user.email,
+            blogs:user.blogs,
+        })
+    }
+    catch(error){
+        res.status(500).json({message:"Server error"})
     }
 }

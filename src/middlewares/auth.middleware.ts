@@ -1,3 +1,4 @@
+import verifyToken from "../utils/verifyToken";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
@@ -13,13 +14,13 @@ export const protect = (req: AuthRequest, res: Response, next: NextFunction) => 
     res.status(401).json({ message: "Not authorized, no token" });
     return;
   }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "defaultsecret") as { id: string };
-    req.user = decoded;
-    next();
-  } catch (error) {
+  const decoded = verifyToken(token);
+  if (!decoded) {
     res.status(401).json({ message: "Not authorized, token failed" });
+    return;
   }
+  req.user = decoded; // Attach the decoded user to the request object
+  next()
+  
 };
 
