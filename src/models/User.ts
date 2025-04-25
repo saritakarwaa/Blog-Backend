@@ -24,6 +24,8 @@ export interface IUser extends Document {
   password: string;
   blogs: Blog[];
   profilePicture: string;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: number;
 }
 
 const reactionSchema: Schema<Reaction> = new Schema({
@@ -94,6 +96,14 @@ const userSchema: Schema<IUser> = new Schema(
     profilePicture:{
       type:String,
       default:"",
+    },
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
+    resetPasswordExpires: {
+      type: Number,
+      default: null,
     }
   },
   {
