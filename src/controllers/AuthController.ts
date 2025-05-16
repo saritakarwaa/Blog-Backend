@@ -7,7 +7,8 @@ import dotenv from "dotenv"
 import redis from '../config/redis';
 import crypto from "crypto"
 import nodemailer from "nodemailer"
-import { uploadToCloudinary } from '../utils/cloudinaryUpload';
+import { uploadToCloudinary } from '../config/cloudinary';
+uploadToCloudinary
 
 dotenv.config()
 interface AuthRequest extends Request {

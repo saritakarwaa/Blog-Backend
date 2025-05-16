@@ -1,7 +1,8 @@
 import { Request,Response } from "express";
 import User from '../models/User'
 import redis from '../config/redis';
-import { uploadToCloudinary } from "../utils/cloudinaryUpload";
+import { uploadToCloudinary } from "../config/cloudinary";
+uploadToCloudinary
 
 export const createBlog=async(req:Request,res:Response)=>{
     try{
