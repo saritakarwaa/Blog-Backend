@@ -9,13 +9,16 @@ export const createBlog=async(req:Request,res:Response)=>{
         if (!user) {
           return res.status(404).json({ error: "User not found" });
         }
-        
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+        const blogImageUrl=files['blogImage']?.[0]?.path || image
+        const blogVideoUrl = files['blogVideo']?.[0]?.path || video;
         const newBlog={
             blogId,
             blogTitle,
             content,
-            image,
-            video,
+            image:blogImageUrl || null,
+            video:blogVideoUrl || null,
             reaction:reaction || [
               {
                 likes: 0,
@@ -59,6 +62,10 @@ export const updateBlog=async(req:Request,res:Response)=>{
           return res.status(404).json({ error: "User not found" });
         }
     
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+        const blogImageUrl=files['blogImage']?.[0]?.path || image
+        const blogVideoUrl = files['blogVideo']?.[0]?.path || video;
+
         // Find the blog in the user's blogs array
         const blogIndex = user.blogs.findIndex((blog) => blog.blogId === blogId);
         //console.log("Blog Index:", blogIndex);
@@ -74,8 +81,8 @@ export const updateBlog=async(req:Request,res:Response)=>{
           blogId: existingBlog.blogId, 
           blogTitle: blogTitle || existingBlog.blogTitle,
           content: content || existingBlog.content,
-          image: image || existingBlog.image,
-          video: video || existingBlog.video,
+          image: blogImageUrl,
+          video: blogVideoUrl,
           reaction: reaction || existingBlog.reaction,
         };
     
