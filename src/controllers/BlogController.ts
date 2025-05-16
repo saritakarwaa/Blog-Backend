@@ -70,8 +70,15 @@ export const updateBlog=async(req:Request,res:Response)=>{
         }
     
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-        const blogImageUrl=files['blogImage']?.[0]?.path || image
-        const blogVideoUrl = files['blogVideo']?.[0]?.path || video;
+        let blogImageUrl = image;
+        let blogVideoUrl = video;
+
+        if (files['blogImage']?.[0]) {
+          blogImageUrl = await uploadToCloudinary(files['blogImage'][0].path, 'blog_images');
+        }
+        if (files['blogVideo']?.[0]) {
+          blogVideoUrl = await uploadToCloudinary(files['blogVideo'][0].path, 'blog_videos');
+        }
 
         // Find the blog in the user's blogs array
         const blogIndex = user.blogs.findIndex((blog) => blog.blogId === blogId);
