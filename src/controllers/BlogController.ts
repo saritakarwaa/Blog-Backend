@@ -1,6 +1,7 @@
 import { Request,Response } from "express";
 import User from '../models/User'
 import redis from '../config/redis';
+import { uploadToCloudinary } from "../utils/cloudinaryUpload";
 
 export const createBlog=async(req:Request,res:Response)=>{
     try{
@@ -10,9 +11,15 @@ export const createBlog=async(req:Request,res:Response)=>{
           return res.status(404).json({ error: "User not found" });
         }
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+        let blogImageUrl = image;
+        let blogVideoUrl = video;
 
-        const blogImageUrl=files['blogImage']?.[0]?.path || image
-        const blogVideoUrl = files['blogVideo']?.[0]?.path || video;
+        if (files['blogImage']?.[0]) {
+          blogImageUrl = await uploadToCloudinary(files['blogImage'][0].path, 'blog_images');
+        }
+        if (files['blogVideo']?.[0]) {
+          blogVideoUrl = await uploadToCloudinary(files['blogVideo'][0].path, 'blog_videos');
+        }
         const newBlog={
             blogId,
             blogTitle,

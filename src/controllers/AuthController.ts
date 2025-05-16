@@ -7,6 +7,7 @@ import dotenv from "dotenv"
 import redis from '../config/redis';
 import crypto from "crypto"
 import nodemailer from "nodemailer"
+import { uploadToCloudinary } from '../utils/cloudinaryUpload';
 
 dotenv.config()
 interface AuthRequest extends Request {
@@ -143,7 +144,8 @@ export const updateUser=async (req:Request,res:Response)=>{
         console.log("Uploaded file:", req.file);
 
         if(req.file){
-            updateData.profilePicture =req.file.path
+            const profilePictureUrl=await uploadToCloudinary(req.file.path,'profile_pictures')
+            updateData.profilePicture=profilePictureUrl
         }
         const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
             new: true,
