@@ -73,11 +73,23 @@ export const updateBlog=async(req:Request,res:Response)=>{
         let blogImageUrl = image;
         let blogVideoUrl = video;
 
-        if (files['blogImage']?.[0]) {
-          blogImageUrl = await uploadToCloudinary(files['blogImage'][0].path, 'blog_images');
+        try{
+          if (files['blogImage']?.[0]) {
+            blogImageUrl = await uploadToCloudinary(files['blogImage'][0].path, 'blog_images');
+          }
         }
-        if (files['blogVideo']?.[0]) {
-          blogVideoUrl = await uploadToCloudinary(files['blogVideo'][0].path, 'blog_videos');
+        catch(err){
+          console.error("Image upload failed:", err);
+          blogImageUrl = image; // fallback to old one
+        }
+        try{
+          if (files['blogVideo']?.[0]) {
+            blogVideoUrl = await uploadToCloudinary(files['blogVideo'][0].path, 'blog_videos');
+          }
+        }
+        catch(err){
+          console.error("Video upload failed:", err);
+          blogVideoUrl = video; // fallback to old one
         }
 
         // Find the blog in the user's blogs array
@@ -95,8 +107,8 @@ export const updateBlog=async(req:Request,res:Response)=>{
           blogId: existingBlog.blogId, 
           blogTitle: blogTitle || existingBlog.blogTitle,
           content: content || existingBlog.content,
-          image: blogImageUrl,
-          video: blogVideoUrl,
+          image: blogImageUrl || existingBlog.image,
+          video: blogVideoUrl || existingBlog.video,
           reaction: reaction || existingBlog.reaction,
         };
     
