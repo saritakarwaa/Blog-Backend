@@ -5,8 +5,7 @@ import AuthRouter from './routes/Auth/user.auth'
 import connectDB from './config/db';
 import blogRoutes from './routes/Blog/BlogRoutes'
 import path from 'path'
-import redis from './config/redis'
-
+import testRoute from './routes/test.route'
 dotenv.config(); 
 
 connectDB();
@@ -28,6 +27,8 @@ app.use(cors({
   },
   credentials: true
 }));
+
+app.use('/test',testRoute)
 
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
