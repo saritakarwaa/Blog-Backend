@@ -77,25 +77,6 @@ export const updateBlog=async(req:Request,res:Response)=>{
         const blogImageUrl = files.blogImage?.[0]?.path || image;
         const blogVideoUrl = files.blogVideo?.[0]?.path || video;
 
-        // try{
-        //   if (files['blogImage']?.[0]) {
-        //     blogImageUrl = await uploadToCloudinary(files['blogImage'][0].path, 'blog_images');
-        //   }
-        // }
-        // catch(err){
-        //   console.error("Image upload failed:", err);
-        //   blogImageUrl = image; // fallback to old one
-        // }
-        // try{
-        //   if (files['blogVideo']?.[0]) {
-        //     blogVideoUrl = await uploadToCloudinary(files['blogVideo'][0].path, 'blog_videos');
-        //   }
-        // }
-        // catch(err){
-        //   console.error("Video upload failed:", err);
-        //   blogVideoUrl = video; // fallback to old one
-        // }
-
         // Find the blog in the user's blogs array
         const blogIndex = user.blogs.findIndex((blog) => blog.blogId === blogId);
         //console.log("Blog Index:", blogIndex);
