@@ -16,17 +16,16 @@ export const createBlog=async(req:Request,res:Response)=>{
         let blogVideoUrl = video;
 
         if (files['blogImage']?.[0]) {
-          blogImageUrl = await uploadToCloudinary(files['blogImage'][0].path, 'blog_images');
-        }
+          blogImageUrl = files['blogImage'][0].path
         if (files['blogVideo']?.[0]) {
-          blogVideoUrl = await uploadToCloudinary(files['blogVideo'][0].path, 'blog_videos');
+          blogVideoUrl = files['blogVideo'][0].path
         }
         const newBlog={
             blogId,
             blogTitle,
             content,
-            image:blogImageUrl || null,
-            video:blogVideoUrl || null,
+            image:blogImageUrl ,
+            video:blogVideoUrl,
             reaction:reaction || [
               {
                 likes: 0,
@@ -35,12 +34,16 @@ export const createBlog=async(req:Request,res:Response)=>{
               }
             ]
         }
+        console.log("Body:", req.body);
+        console.log("Files received:", req.files);
+
         user.blogs.push(newBlog);
         await user.save()
         res.status(201).json({
           message: "Blog created successfully",
           blog: newBlog,
         });
+      }
     }
     catch{
         res.status(500).json({ error: 'Error creating blog' });
