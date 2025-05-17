@@ -19,11 +19,11 @@ router.post('/',protect,
     {name:'blogVideo',maxCount:1}
   ]),createBlog as express.RequestHandler); 
 router.get('/', getAllBlogs); 
-router.put('/:userId/:blogId',
+router.put('/:userId/:blogId',protect,
   upload.fields([
     {name:'blogImage',maxCount:5},
     {name:'blogVideo',maxCount:1}
-  ]),protect,updateBlog as express.RequestHandler)
+  ]),updateBlog as express.RequestHandler)
 router.delete('/:userId/:blogId',protect,deleteBlog as express.RequestHandler); 
 router.get('/:userId/:blogId', protect,getBlog as express.RequestHandler)
 
