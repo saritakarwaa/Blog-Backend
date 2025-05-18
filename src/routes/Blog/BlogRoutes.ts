@@ -9,7 +9,7 @@ import {
 } from '../../controllers/BlogController';
 import upload from '../../middlewares/upload';
 import {protect} from '../../middlewares/auth.middleware';
-import cloudinary from '../../config/cloudinary';
+
 
 const router: Router = express.Router();
 
