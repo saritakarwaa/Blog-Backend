@@ -15,11 +15,11 @@ export const createBlog=async(req:Request,res:Response)=>{
         let blogImageUrl = image;
         let blogVideoUrl = video;
 
-        if (files['blogImage']?.[0]) {
+        if (files['blogImage']?.[0]) 
           blogImageUrl = files['blogImage'][0].path
-        if (files['blogVideo']?.[0]) {
+        if (files['blogVideo']?.[0]) 
           blogVideoUrl = files['blogVideo'][0].path
-        }
+
         const newBlog={
             blogId,
             blogTitle,
@@ -39,11 +39,9 @@ export const createBlog=async(req:Request,res:Response)=>{
 
         user.blogs.push(newBlog);
         await user.save()
-        res.status(201).json({
+        return res.status(201).json({
           message: "Blog created successfully",
-          blog: newBlog,
-        });
-      }
+          blog: newBlog,});
     }
     catch{
         res.status(500).json({ error: 'Error creating blog' });
