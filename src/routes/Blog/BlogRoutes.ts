@@ -4,7 +4,8 @@ import {
   getAllBlogs,
   updateBlog,
   deleteBlog,
-  getBlog
+  getBlog,
+  summarizeBlog
   
 } from '../../controllers/BlogController';
 import upload from '../../middlewares/upload';
@@ -26,6 +27,6 @@ router.put('/:userId/:blogId',protect,
   ]),updateBlog as express.RequestHandler)
 router.delete('/:userId/:blogId',protect,deleteBlog as express.RequestHandler); 
 router.get('/:userId/:blogId', protect,getBlog as express.RequestHandler)
-
+router.post('/:userId/:blogId/summarize',protect,summarizeBlog as express.RequestHandler)
 
 export default router;

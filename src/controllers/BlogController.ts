@@ -3,6 +3,7 @@ import User from '../models/User'
 import redis from '../config/redis';
 import { uploadToCloudinary } from "../config/cloudinary";
 uploadToCloudinary
+import axios from "axios";
 
 export const createBlog=async(req:Request,res:Response)=>{
     try{
@@ -153,5 +154,27 @@ export const getBlog=async(req:Request,res:Response)=>{
   catch(error){
     console.error(error);
     res.status(500).json({ error: "Server error while fetching blog" });
+  }
+}
+
+export const summarizeBlog=async(req:Request,res:Response)=>{
+  const {userId,blogId}=req.params
+  try{
+    const user =  await User.findOne({ id: userId });
+    if(!user) return res.status(404).json({error:"User not found"})
+    const blog=user.blogs.find((b)=>b.blogId==blogId)
+    if (!blog) return res.status(404).json({ message: "Blog not found" })
+
+    const HF_apiKey=process.env.HUGGINGFACE_API_KEY
+    const model='facebook/bart-large-cnn'
+    const response=await axios.post(
+      `https://api-inference.huggingface.co/models/${model}`,
+      {inputs:blog.content},
+      {headers:{ Authorization: `Bearer ${HF_apiKey}`}}
+    )
+  }
+  catch(error){
+    console.error("Summarization error:", error);
+    return res.status(500).json({ message: "Error summarizing blog" });
   }
 }
