@@ -166,7 +166,7 @@ export const summarizeBlog=async(req:Request,res:Response)=>{
     if (!blog) return res.status(404).json({ message: "Blog not found" })
 
     const HF_apiKey=process.env.HUGGINGFACE_API_KEY
-    const model='facebook/bart-large-cnn'
+    const model='sshleifer/distilbart-cnn-12-6'
     const response=await axios.post(
       `https://api-inference.huggingface.co/models/${model}`,
       {inputs:blog.content},
