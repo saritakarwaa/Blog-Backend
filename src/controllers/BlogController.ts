@@ -27,24 +27,20 @@ export const createBlog=async(req:Request,res:Response)=>{
             content,
             image:blogImageUrl ,
             video:blogVideoUrl,
-            reaction:reaction || [
-              {
-                likes: 0,
-                funny: 0,
-                insightful: 0,
-              }
-            ]
+            reaction: reaction ? JSON.parse(reaction) : [{ likes: 0, funny: 0, insightful: 0 }]
         }
         console.log("Body:", req.body);
         console.log("Files received:", req.files);
 
         user.blogs.push(newBlog);
         await user.save()
+        console.log("User after saving blog:", user);
         return res.status(201).json({
           message: "Blog created successfully",
           blog: newBlog,});
     }
-    catch{
+    catch(error){
+        console.error("Error creating blog:", error);
         res.status(500).json({ error: 'Error creating blog' });
     }
 }
@@ -66,7 +62,8 @@ export const updateBlog=async(req:Request,res:Response)=>{
         const { userId, blogId } = req.params;
         const { blogTitle, content, image, video, reaction } = req.body;
     
-        const user = await User.findById(userId);
+        //const user = await User.findById(userId); mongodb id
+        const user = await User.findOne({id:userId}); //username
         console.log("user found:", user)
         if (!user) {
           return res.status(404).json({ error: "User not found" });
